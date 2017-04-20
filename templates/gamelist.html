@@ -1,0 +1,41 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Game List{% endblock %}
+
+{% block page_content%}
+<div class = "page-header">
+	<h1>Game List</h1>
+	<p1>These are all the games that you have joined, and games that are open to join.</p1> 
+	{% if Registration.query.filter_by(user_id = current_user.id).first() != None %}<h2>Games/Lobbies You've Joined</h2>{% endif %}
+	<div class="list-group">
+		{% for r in Registration.query.filter_by(user_id = current_user.id) %}
+			<a href="{{ url_for('game', name=r.game.name) }}" class="list-group-item">
+				<h4 class="list-group-item-heading">
+						Game Name: <b>{{ r.game.name }}</b>,  
+						Created By: <b>{{ r.game.owner.username }}</b>. {% if r.game.has_completed %}<b>GAME FINISHED</b>{% elif r.game.has_begun == True %}<b>GAME IN PROGRESS</b>{% else %}<b>LOBBY</b>{% endif %}
+				</h4>
+				{% for registration in Registration.query.filter_by(game_id = r.game.id) %}
+					<p class="list-group-item-text">- {{ User.query.get(registration.user_id).username }}</p>
+				{% endfor %}
+			</a>
+		{% endfor %}
+	</div>
+	<h2>Available Lobbies</h2>
+	<div class="list-group">
+		{% for game in Game.query.filter_by(has_begun = False) %}
+			{% if Registration.query.filter_by(game_id=game.id, user_id = current_user.id).first() == None %}
+			<a href="{{ url_for('game', name=game.name) }}" class="list-group-item">
+				<h4 class="list-group-item-heading">
+					Game Name: <b>{{ game.name }}</b>,  
+					Created By: <b>{{ game.owner.username }}</b>. <b>LOBBY</b>
+				</h4>
+				{% for registration in Registration.query.filter_by(game_id = game.id) %}
+					<p class="list-group-item-text">- {{ User.query.get(registration.user_id).username }}</p>
+				{% endfor %}
+			</a>
+			{% endif %}
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}

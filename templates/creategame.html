@@ -1,0 +1,12 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Main Page{% endblock %}
+
+{% block page_content%}
+<div class = "page-header">
+	<h1>Create Game Lobby</h1>
+</div>
+
+{{ wtf.quick_form(form) }}
+{% endblock %}

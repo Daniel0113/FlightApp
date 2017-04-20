@@ -1,0 +1,28 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content%}
+
+<div class="jumbotron">
+	<div class="container">
+		<h1>Welcome to Deadly Curiosity!</h1>
+		
+		{% if current_user in User.query.all() %}
+  			<p>What are you waiting for {{ current_user.username }}? You know you want to go check.</p>
+			<p><a class="btn btn-primary btn-lg" href="{{ url_for('game_list') }}" role="button">Game List &raquo;</a></p>
+		{% else %}
+			<p>Deadly Curiosity is an interesting game where looking at the scoreboard comes with a price.</p>
+		{% endif %}
+	</div>
+</div>
+
+<h1>How Does it Work?</h1>
+<p>The premise of Deadly Curiosity is simple. Once you join and/or begin a game (see "Getting Started" below for more info), you start off with ten points along with everyone else. Every time you look at the scoreboard, you lose a point. If your score reaches 0, you're eliminated. Of course, wouldn't the best strategy be to never look? Sure, but you'll never know if you've won. This is one of the many things you can use to your advantage when trying to bluff other players. Deception and patience is key!</p>
+
+<h1>Getting Started</h1>
+<p>Getting started is insanely easy. First, sign up for an account <a href="{{url_for('register')}}">here</a> and login. Once you log in, you will have the ability to join and create games (these options will be seen on the top of the website). When you join a lobby, you have to wait for the lobby creator to start the game. Once the game has started, you will see that its status switched from "LOBBY" to "GAME IN PROGRESS" and it cannot be joined by other players from there. Any time you click on the game from then on, you lose a point.</p>
+
+<p><b>Quick hint</b>: if you know a game that you joined will be starting soon, click refresh while you are in the Game List page to see the game's status switch from "LOBBY" to "GAME IN PROGRESS." That way, it removes the possibility of clicking the page and viewing the scoreboard, losing a point!</p>
+
+
+{% endblock %}
