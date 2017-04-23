@@ -1,0 +1,15 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content%}
+
+<div class = "page-header">
+	<h1>Create Flight</h1>
+</div>
+
+{% if current_user.is_admin %}
+{{ wtf.quick_form(form) }}
+{% else %}
+You are not authorized to view this page.
+{% endif %}
+{% endblock %}

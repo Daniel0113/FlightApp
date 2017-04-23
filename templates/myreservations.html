@@ -1,0 +1,45 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content%}
+
+{% if not Reservation.query.filter_by(user_id=current_user.id).all() %}
+<p1> No reservations found. You can make reservations by searching for flights <a href={{url_for('search_flights')}}>here.</a>
+
+
+{% else %}
+{% if Reservation.query.filter_by(user_id=current_user.id, confirmed = False).all() %}
+<h1>Unconfirmed Reservations</h1>
+{% endif %}
+{% for r in Reservation.query.filter_by(user_id=current_user.id, confirmed = False) %}
+	<font size="+1">
+	<h2>Reservation for flight #{{r.flight_id}}</h2>
+	<ul>
+		<li>Departing Airport: {{Flight.query.filter_by(id = r.flight_id).first().departing_airport}}</li>
+		<li>Arriving Airport: {{Flight.query.filter_by(id = r.flight_id).first().arriving_airport}}</li>
+		<li>Price: ${{Flight.query.filter_by(id = r.flight_id).first().price}}</li>
+		<li>Date: {{Flight.query.filter_by(id = r.flight_id).first().month}}/{{Flight.query.filter_by(id = r.flight_id).first().day}}/{{Flight.query.filter_by(id = r.flight_id).first().year}}</li>
+	</ul>
+	<p><a class="btn btn-success btn-md" href="{{ url_for('confirm_reservation', flightno = r.flight_id) }}" role="button">Confirm Reservation</a></p>
+	<p><a class="btn btn-danger btn-md" href="{{ url_for('delete_reservation', flightno = r.flight_id) }}" role="button">Cancel Reservation</a></p>
+	</font>
+{% endfor %}
+{% if Reservation.query.filter_by(user_id=current_user.id, confirmed = True).all() %}
+<h1>Confirmed Reservations</h1>
+{% endif %}
+{% for r in Reservation.query.filter_by(user_id=current_user.id, confirmed = True) %}
+	<font size="+1">
+	<h2>Reservation for flight #{{r.flight_id}}</h2>
+	<ul>
+		<li>Departing Airport: {{Flight.query.filter_by(id = r.flight_id).first().departing_airport}}</li>
+		<li>Arriving Airport: {{Flight.query.filter_by(id = r.flight_id).first().arriving_airport}}</li>
+		<li>Price: ${{Flight.query.filter_by(id = r.flight_id).first().price}}</li>
+		<li>Date: {{Flight.query.filter_by(id = r.flight_id).first().month}}/{{Flight.query.filter_by(id = r.flight_id).first().day}}/{{Flight.query.filter_by(id = r.flight_id).first().year}}</li>
+	</ul>
+	<p><a class="btn btn-danger btn-lg" href="{{ url_for('delete_reservation', flightno = r.flight_id) }}" role="button">Cancel Reservation</a></p>
+	</font>
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}

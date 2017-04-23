@@ -1,6 +1,6 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}Deadly Curiosity{% endblock %}
+{% block title %}Flight Finder{% endblock %}
 
 {% block navbar %}
 <div class="navbar navbar-inverse" role="navigation">
@@ -18,8 +18,9 @@
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				{% if not current_user.is_authenticated %}<li><a href="{{ url_for('register') }}">Register</a></li>{% endif %}
-				{% if current_user.is_authenticated %}<li><a href="{{ url_for('game_list') }}">Game List</a></li>{% endif %}
-				{% if current_user.is_authenticated %}<li><a href="{{ url_for('create_game') }}">Create Game</a></li>{% endif %}
+				{% if current_user.is_authenticated and current_user.is_admin %}<li><a href="{{ url_for('create_flight') }}">Create Flight</a></li> {% endif %}
+				<li><a href="{{ url_for('search_flights') }}">Search Flights</a></li>
+				{% if current_user.is_authenticated %}<li><a href="{{ url_for('my_reservations') }}">My Reservations</a></li>{% endif %}
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				{% if current_user.is_authenticated %}

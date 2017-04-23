@@ -1,0 +1,47 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content%}
+{% if Flight.query.filter_by(departing_airport=airport).all() or Flight.query.filter_by(arriving_airport=airport).all() %}
+	{% if Flight.query.filter_by(departing_airport=airport).all() %}
+		<h1>Flights going from {{airport}}</h1>
+	{% endif %}
+	<div class="list-group">
+
+	{% for flight in Flight.query.filter_by(departing_airport = airport) %}
+		<a href="{{ url_for('flight', flightno = flight.id) }}" class="list-group-item">
+			<h4 class="list-group-item-heading">
+					Flight Number: <b>{{ flight.id }}</b>  
+			</h4>
+			<p class="list-group-item-text">- Departing: <b>{{ flight.departing_airport }}</b></p>
+			<p class="list-group-item-text">- Arriving: <b>{{ flight.arriving_airport }}</b></p>
+			<p class="list-group-item-text">- Date: <b>{{ flight.month }}/{{ flight.day }}/{{ flight.year }}</b></p>
+			<p class="list-group-item-text">- Price: <b>${{ flight.price }}</b></p>
+			<p class="list-group-item-text">- Time: <b>{{ flight.time }}</b></p>
+		</a>
+		{% endfor %}
+	</div>
+
+	{% if Flight.query.filter_by(arriving_airport=airport).all() %}
+		<h1>Flights going to {{airport}}</h1>
+	{% endif %}
+	
+	<div class="list-group">
+
+	{% for flight in Flight.query.filter_by(arriving_airport = airport) %}
+		<a href="{{ url_for('flight', flightno = flight.id) }}" class="list-group-item">
+			<h4 class="list-group-item-heading">
+					Flight Number: <b>{{ flight.id }}</b>  
+			</h4>
+			<p class="list-group-item-text">- Departing: <b>{{ flight.departing_airport }}</b></p>
+			<p class="list-group-item-text">- Arriving: <b>{{ flight.arriving_airport }}</b></p>
+			<p class="list-group-item-text">- Date: <b>{{ flight.month }}/{{ flight.day }}/{{ flight.year }}</b></p>
+			<p class="list-group-item-text">- Price: <b>${{ flight.price }}</b></p>
+			<p class="list-group-item-text">- Time: <b>{{ flight.time }}</b></p>
+		</a>
+		{% endfor %}
+	</div>
+{% else %}
+<h1>Sorry, no flights match your query.</h1> 
+{% endif %}
+{% endblock %}

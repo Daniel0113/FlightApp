@@ -1,0 +1,54 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content%}
+<font size="+2">
+<h1>Flight #{{flightno}}</h1>
+<ul>
+	<li>Departing Airport: {{flight.departing_airport}}</li>
+	<li>Arriving Airport: {{flight.arriving_airport}}</li>
+	<li>Price: ${{flight.price}}</li>
+	<li>Date: {{flight.month}}/{{flight.day}}/{{flight.year}}</li>
+	<li>Time: {{flight.time}}</li>
+</ul>
+</font>
+{% if not Reservation.query.filter_by(flight_id = flightno, user_id = current_user.id).all() %}
+<p><a class="btn btn-primary btn-lg" href="{{ url_for('reserve_flight', flightno = flightno) }}" role="button">Reserve Flight &raquo;</a></p>
+{% else %}
+<p><a class="btn btn-danger btn-md" href="{{ url_for('delete_reservation', flightno = flightno) }}" role="button">Cancel Flight Reservation</a></p>
+{% endif %}
+{% if current_user.is_admin %}
+<h2> There are {{ Reservation.query.filter_by(flight_id = flightno).all()|length }} reservations for this flight </h2>
+<h2> Revenue total from confirmed flights: ${{ Reservation.query.filter_by(flight_id = flightno, confirmed = True).all()|length * Flight.query.filter_by(id = flightno).first().price }}</h2>
+
+{% if Reservation.query.filter_by(flight_id = flightno, confirmed = False).all() %}
+<h2>Unconfirmed Reservations</h2>
+<hr>
+{% endif %}
+
+{% for r in Reservation.query.filter_by(flight_id = flightno, confirmed = False) %}
+
+<h3>Reservation #{{r.id}}</h3>
+	<ul>
+		<li>User: {{User.query.filter_by(id = r.user_id).first().first_name}} {{User.query.filter_by(id = r.user_id).first().last_name}}</li>
+	</ul>
+
+{% endfor %}
+
+{% if Reservation.query.filter_by(flight_id = flightno, confirmed = True).all() %}
+<h2>Confirmed Reservations</h2>
+<hr>
+{% endif %}
+
+{% for r in Reservation.query.filter_by(flight_id = flightno, confirmed = True) %}
+
+<h3>Reservation #{{r.id}}</h3>
+<ul>
+		<li>User: {{User.query.filter_by(id = r.user_id).first().first_name}} {{User.query.filter_by(id = r.user_id).first().last_name}}</li>
+	</ul>
+{% endfor %}
+
+{% endif %}
+
+
+{% endblock %}
